@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  stremio-imvdb:
+    build: .
+    container_name: stremio-imvdb
+    ports:
+      - "${STREMIO_IMVDB_PORT-80}:${STREMIO_IMVDB_PORT-80}"
+    environment:
+      - STREMIO_IMVDB_APP_KEY
+      - STREMIO_IMVDB_HOST
+      - STREMIO_IMVDB_PORT
+      - STREMIO_IMVDB_EMAIL
+    restart: unless-stopped
