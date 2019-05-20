@@ -1,0 +1,9 @@
+repos:
+  - repo: https://github.com/ambv/black
+    rev: 18.9b0
+    hooks:
+    - id: black
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: 3.7.6
+    hooks:
+    - id: flake8

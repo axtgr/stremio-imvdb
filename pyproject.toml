@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "stremio-imvdb"
+version = "0.1.0"
+description = ""
+authors = ["Alex Schneider <me@schneider.ax>"]
+license = "ISC"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[tool.poetry.dev-dependencies]
+black = {version = "^18.3-alpha.0",allows-prereleases = true}
+flake8 = "^3.7"
+pep8-naming = "^0.8.2"
+pre-commit = "^1.16"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
