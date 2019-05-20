@@ -4,8 +4,8 @@ import os
 import jinja2
 import aiohttp_jinja2
 from aiohttp import web
-from .client import IMVDbClient
-from .common import ID_PREFIX
+from stremio_imvdb.client import IMVDbClient
+from stremio_imvdb.common import ID_PREFIX
 
 
 config = {
@@ -101,12 +101,6 @@ async def stream_handler(request):
     id = request.match_info["id"]
     streams = await client.get_video_streams(id)
     return web.json_response({"streams": streams})
-
-
-@routes.get("/{path:.*}")
-async def default_handler(request):
-    print("Unknown request:", request.url)
-    raise web.HTTPNotFound
 
 
 async def on_response_prepare(request, response):

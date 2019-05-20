@@ -1,7 +1,7 @@
 import aiohttp
 from datetime import datetime
-from .common import ID_PREFIX, SITE_URL, API_URL
-from .parser import IMVDbParser
+from stremio_imvdb.common import ID_PREFIX, SITE_URL, API_URL
+from stremio_imvdb.parser import IMVDbParser
 
 
 class IMVDbClient:

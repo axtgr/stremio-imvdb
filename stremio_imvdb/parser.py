@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 from parsel import Selector
-from .common import ID_PREFIX
+from stremio_imvdb.common import ID_PREFIX
 
 
 class IMVDbParser:
