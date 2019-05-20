@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import os
+import jinja2
+import aiohttp_jinja2
 from aiohttp import web
 from .client import IMVDbClient
 from .common import ID_PREFIX
@@ -18,11 +20,12 @@ if config["app_key"] is None:
     exit(1)
 
 
+TEMPLATES_DIR = os.path.dirname(os.path.realpath(__file__)) + "/templates/"
 MANIFEST = {
     "id": "community.imvdb",
     "version": "0.1.0",
     "name": "IMVDb Music Videos",
-    "description": "",
+    "description": "Watch 83,000+ music videos from IMVDb in Stremio",
     "types": ["movie"],
     "catalogs": [
         {"type": "Music Videos", "id": "best_new", "name": "Best New"},
@@ -46,11 +49,19 @@ MANIFEST = {
         {"name": "stream", "types": ["movie"], "idPrefixes": [ID_PREFIX]},
     ],
     "contactEmail": config["email"],
+    "logo": "https://github.com/axtgr/stremio-imvdb/blob/master/static/logo.png?raw=true",  # noqa: E501
+    "background": "https://github.com/axtgr/stremio-imvdb/blob/master/static/background.jpg?raw=true",  # noqa: E501
 }
 
 
 client = IMVDbClient(app_key=config["app_key"])
 routes = web.RouteTableDef()
+
+
+@routes.get("/")
+@aiohttp_jinja2.template("home.j2")
+async def home_handler(request):
+    return MANIFEST
 
 
 @routes.get("/manifest.json")
@@ -117,6 +128,7 @@ app.on_response_prepare.append(on_response_prepare)
 app.on_startup.append(on_startup)
 app.on_shutdown.append(on_shutdown)
 app.add_routes(routes)
+aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader(TEMPLATES_DIR))
 
 
 def start():
