@@ -5,8 +5,13 @@ description = ""
 authors = ["Alex Schneider <me@schneider.ax>"]
 license = "ISC"
 
+[tool.poetry.scripts]
+start = "stremio_imvdb.addon:start"
+
 [tool.poetry.dependencies]
 python = "^3.7"
+aiohttp = "^3.5"
+parsel = "^1.5"
 
 [tool.poetry.dev-dependencies]
 black = {version = "^18.3-alpha.0",allows-prereleases = true}
