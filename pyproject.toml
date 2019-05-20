@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "stremio-imvdb"
 version = "0.1.0"
-description = ""
+description = "Watch 83,000+ music videos from IMVDb in Stremio"
 authors = ["Alex Schneider <me@schneider.ax>"]
 license = "ISC"
 
