@@ -54,6 +54,17 @@ version = "3.0.1"
 
 [[package]]
 category = "main"
+description = "Helpers to use cachetools with async functions"
+name = "asyncache"
+optional = false
+python-versions = "*"
+version = "0.1.1"
+
+[package.dependencies]
+cachetools = ">=2.1"
+
+[[package]]
+category = "main"
 description = "Classes Without Boilerplate"
 name = "attrs"
 optional = false
@@ -73,6 +84,14 @@ appdirs = "*"
 attrs = ">=17.4.0"
 click = ">=6.5"
 toml = ">=0.9.4"
+
+[[package]]
+category = "main"
+description = "Extensible memoizing collections and decorators"
+name = "cachetools"
+optional = false
+python-versions = "*"
+version = "3.1.0"
 
 [[package]]
 category = "dev"
@@ -344,7 +363,7 @@ python-versions = ">=2.7"
 version = "0.5.1"
 
 [metadata]
-content-hash = "0f9e8fdb9ea75b683f354fdd587da518529a12521b191fb15c4b36e2243d06d2"
+content-hash = "8476afa7792ed5fcf776402339471d80d49714e58c3fb8daf27316b429f12db4"
 python-versions = "^3.7"
 
 [metadata.hashes]
@@ -353,8 +372,10 @@ aiohttp-jinja2 = ["06b86744fdd41ef9fbfc10f38a07dd39577d625a45ee441a0e00556cac78e
 appdirs = ["9e5896d1372858f8dd3344faf4e5014d21849c756c8d5701f78f8a103b372d92", "d8b24664561d0d34ddfaec54636d502d7cea6e29c3eaf68f3df6180863e2166e"]
 "aspy.yaml" = ["ae249074803e8b957c83fdd82a99160d0d6d26dff9ba81ba608b42eebd7d8cd3", "c7390d79f58eb9157406966201abf26da0d56c07e0ff0deadc39c8f4dbc13482"]
 async-timeout = ["0c3c816a028d47f659d6ff5c745cb2acf1f966da1fe5c19c77a70282b25f4c5f", "4291ca197d287d274d0b6cb5d6f8f8f82d434ed288f962539ff18cc9012f9ea3"]
+asyncache = ["c741b3ccef2c5291b3da05d97bab3cc8d50f2ac8efd7fd79d47e3d7b6a3774de"]
 attrs = ["69c0dbf2ed392de1cb5ec704444b08a5ef81680a61cb899dc08127123af36a79", "f0b870f674851ecbfbbbd364d6b5cbdff9dcedbc7f3f5e18a6891057f21fe399"]
 black = ["817243426042db1d36617910df579a54f1afd659adb96fc5032fcf4b36209739", "e030a9a28f542debc08acceb273f228ac422798e5215ba2a791a6ddeaaca22a5"]
+cachetools = ["219b7dc6024195b6f2bc3d3f884d1fef458745cd323b04165378622dcc823852", "9efcc9fab3b49ab833475702b55edd5ae07af1af7a4c627678980b45e459c460"]
 cfgv = ["6e9f2feea5e84bc71e56abd703140d7a2c250fc5ba38b8702fd6a68ed4e3b2ef", "e7f186d4a36c099a9e20b04ac3108bd8bb9b9257e692ce18c8c3764d5cb12172"]
 chardet = ["84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae", "fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"]
 click = ["2335065e6395b9e67ca716de5f7526736bfa6ceead690adf616d925bdc622b13", "5b94b49521f6456670fdb30cd82a4eca9412788a93fa6dd6df72c94d5a8ff2d7"]

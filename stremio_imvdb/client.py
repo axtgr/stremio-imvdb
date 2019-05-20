@@ -1,5 +1,8 @@
 import aiohttp
+import math
 from datetime import datetime
+from asyncache import cached
+from cachetools import TTLCache
 from stremio_imvdb.common import ID_PREFIX, SITE_URL, API_URL
 from stremio_imvdb.parser import IMVDbParser
 
@@ -34,16 +37,19 @@ class IMVDbClient:
             "director": [dir["entity_name"] for dir in video["directors"]],
         }
 
+    @cached(cache=TTLCache(ttl=600, maxsize=1))
     async def get_best_new_list(self):
         async with self._session.get(f"{SITE_URL}/picks") as response:
             text = await response.text()
         return self._parser.parse_rack_page(text)
 
+    @cached(cache=TTLCache(ttl=600, maxsize=1))
     async def get_latest_releases_list(self):
         async with self._session.get(f"{SITE_URL}/new") as response:
             text = await response.text()
         return self._parser.parse_rack_page(text)
 
+    @cached(cache=TTLCache(ttl=600, maxsize=1))
     async def get_popular_list(self, period):
         period = {
             "Latest": "new",
@@ -55,6 +61,7 @@ class IMVDbClient:
             text = await response.text()
         return self._parser.parse_chart_page(text)
 
+    @cached(cache=TTLCache(ttl=600, maxsize=math.inf))
     async def get_video_meta(self, id):
         async with self._session.get(
             f"{API_URL}/video/{id[len(ID_PREFIX):]}?include=sources"
@@ -62,6 +69,7 @@ class IMVDbClient:
             video = await response.json()
         return self._video_to_meta(video)
 
+    @cached(cache=TTLCache(ttl=600, maxsize=math.inf))
     async def get_video_streams(self, id):
         async with self._session.get(
             f"{API_URL}/video/{id[len(ID_PREFIX):]}?include=sources"
