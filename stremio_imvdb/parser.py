@@ -11,7 +11,12 @@ class IMVDbParser:
         "title_with_year": re.compile("(.*)\\((\\d{4})\\)"),
     }
 
-    def _parse_poster_url(self, poster_url):
+    def _parse_poster_img(self, poster_img):
+        poster_url = poster_img and poster_img.attrib["src"]
+
+        if not poster_url:
+            return (None, None)
+
         id = self._regexps["id_in_poster_url"].search(poster_url)
         poster_url = self._regexps["poster_quality"].sub("_ov.jpg", poster_url)
         return poster_url, id and id.group(1)
@@ -26,10 +31,14 @@ class IMVDbParser:
             return title, ""
 
     def parse_rack_node(self, item):
-        poster, id = self._parse_poster_url(item.css(".rack_img").attrib["src"])
+        poster, id = self._parse_poster_img(item.css(".rack_img"))
         released_timestamp = int(item.css(".release").attrib["data-release"])
         released = datetime.fromtimestamp(released_timestamp)
         name = self._parse_title_link(item.css("h3 > a"))[0]
+
+        if not id or not name:
+            return None
+
         return {
             "type": "movie",
             "id": ID_PREFIX + id,
@@ -49,11 +58,13 @@ class IMVDbParser:
         }
 
     def parse_chart_item(self, item):
-        poster, id = self._parse_poster_url(
-            item.css("td:first-child img").attrib["src"]
-        )
+        poster, id = self._parse_poster_img(item.css("td:first-child img"))
         main_td = item.css("td:nth-child(2)")
         name, year = self._parse_title_link(main_td.css("p.artist_line a"))
+
+        if not id or not name:
+            return None
+
         return {
             "type": "movie",
             "id": ID_PREFIX + id,
@@ -72,11 +83,13 @@ class IMVDbParser:
         }
 
     def parse_table_item(self, item):
-        poster, id = self._parse_poster_url(
-            item.css("td:first-child img").attrib["src"]
-        )
+        poster, id = self._parse_poster_img(item.css("td:first-child img"))
         main_td = item.css("td:nth-child(2)")
         name, year = self._parse_title_link(main_td.css("h3 > a"))
+
+        if not id or not name:
+            return None
+
         return {
             "type": "movie",
             "id": ID_PREFIX + id,
@@ -96,18 +109,27 @@ class IMVDbParser:
 
     def parse_rack_page(self, text):
         page = Selector(text=text)
-        return [self.parse_rack_node(item) for item in page.css(".rack_node")]
+        return list(
+            filter(None.__ne__, map(self.parse_rack_node, page.css(".rack_node")))
+        )
 
     def parse_chart_page(self, text):
         page = Selector(text=text)
-        return [
-            self.parse_chart_item(item) for item in page.css(".imvdb-chart-table tr")
-        ]
+        return list(
+            filter(
+                None.__ne__,
+                map(self.parse_chart_item, page.css(".imvdb-chart-table tr")),
+            )
+        )
 
     def parse_country_page(self, text):
         page = Selector(text=text)
-        return [self.parse_table_item(item) for item in page.css(".imvdbTable tr")]
+        return list(
+            filter(None.__ne__, map(self.parse_table_item, page.css(".imvdbTable tr")))
+        )
 
     def parse_year_page(self, text):
         page = Selector(text=text)
-        return [self.parse_table_item(item) for item in page.css(".imvdbTable tr")]
+        return list(
+            filter(None.__ne__, map(self.parse_table_item, page.css(".imvdbTable tr")))
+        )
