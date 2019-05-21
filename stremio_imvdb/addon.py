@@ -3,9 +3,10 @@
 import os
 import jinja2
 import aiohttp_jinja2
+from datetime import date
 from aiohttp import web
 from stremio_imvdb.client import IMVDbClient
-from stremio_imvdb.common import ID_PREFIX
+from stremio_imvdb.common import ID_PREFIX, COUNTRIES
 
 
 config = {
@@ -39,6 +40,26 @@ MANIFEST = {
                     "name": "genre",
                     "isRequired": True,
                     "options": ["Latest", "This Week", "This Month", "All Time"],
+                }
+            ],
+        },
+        {
+            "type": "Music Videos",
+            "id": "by_country",
+            "name": "By Country",
+            "extra": [
+                {"name": "genre", "isRequired": True, "options": list(COUNTRIES.keys())}
+            ],
+        },
+        {
+            "type": "Music Videos",
+            "id": "by_year",
+            "name": "By Year",
+            "extra": [
+                {
+                    "name": "genre",
+                    "isRequired": True,
+                    "options": list(range(date.today().year, 1962, -1)),
                 }
             ],
         },
@@ -86,6 +107,22 @@ async def latest_releases_catalog_handler(request):
 async def popular_catalog_handler(request):
     period = request.match_info.get("period", "Latest")
     metas = await client.get_popular_list(period)
+    return web.json_response({"metas": metas})
+
+
+@routes.get("/catalog/Music Videos/by_country.json")
+@routes.get("/catalog/Music Videos/by_country/genre={country}.json")
+async def by_country_catalog_handler(request):
+    country = request.match_info.get("country", "United States")
+    metas = await client.get_videos_for_country_list(country)
+    return web.json_response({"metas": metas})
+
+
+@routes.get("/catalog/Music Videos/by_year.json")
+@routes.get("/catalog/Music Videos/by_year/genre={year}.json")
+async def by_year_catalog_handler(request):
+    country = request.match_info.get("year", date.today().year)
+    metas = await client.get_videos_for_year_list(country)
     return web.json_response({"metas": metas})
 
 

@@ -3,7 +3,7 @@ import math
 from datetime import datetime
 from asyncache import cached
 from cachetools import TTLCache
-from stremio_imvdb.common import ID_PREFIX, SITE_URL, API_URL
+from stremio_imvdb.common import ID_PREFIX, SITE_URL, API_URL, COUNTRIES
 from stremio_imvdb.parser import IMVDbParser
 
 
@@ -60,6 +60,21 @@ class IMVDbClient:
         async with self._session.get(f"{SITE_URL}/charts/{period}") as response:
             text = await response.text()
         return self._parser.parse_chart_page(text)
+
+    @cached(cache=TTLCache(ttl=600, maxsize=1))
+    async def get_videos_for_country_list(self, country):
+        country_code = COUNTRIES[country]
+        url = f"{SITE_URL}/country/{country_code}"
+        async with self._session.get(url) as response:
+            text = await response.text()
+        return self._parser.parse_country_page(text)
+
+    @cached(cache=TTLCache(ttl=600, maxsize=1))
+    async def get_videos_for_year_list(self, year):
+        url = f"{SITE_URL}/calendar/{year}"
+        async with self._session.get(url) as response:
+            text = await response.text()
+        return self._parser.parse_year_page(text)
 
     @cached(cache=TTLCache(ttl=600, maxsize=math.inf))
     async def get_video_meta(self, id):
