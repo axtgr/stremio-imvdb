@@ -22,7 +22,8 @@
             background-size: auto 100%;
             background-size: cover;
             background-position: center top;
-            background-repeat: no-repeat
+            background-repeat: no-repeat;
+            background-color: #000;
         }
 
         body {
@@ -67,19 +68,16 @@
             background: rgba(125, 79, 158, 0.85);
         }
 
-        .logo {
-            max-width: 300px;
-        }
-
         .description {
             font-size: 20px;
+            margin: 30px 0;
         }
     </style>
 </head>
 
 <body>
     <div id="addon">
-        <img class="logo" src="{{ logo }}">
+        <img class="logo" src="{{ logo }}" width="300" height="77">
         <p class="description">{{ description }}</p>
         <a id="installLink" class="install-link" href="#">
             <button name="Install">Install Add-on</button>
