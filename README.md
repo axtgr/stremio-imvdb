@@ -13,14 +13,14 @@ If you just want to watch the videos provided by the add-on in Stremio, you don'
 
 This add-on is a Python app that retrieves the YouTube IDs of music videos from IMVDb and provides them to Stremio. It supports in-memory caching, can be configured using environment variables and run in Docker.
 
-The app is split into two main parts, add-on server and IMVDb client, both built using [aiohttp](https://aiohttp.readthedocs.io). The server listens for HTTP requests from Stremio clients and dispatches calls to the client, which translates them to requests to the IMVDb API and web interface.
+The app has two main parts, add-on server and IMVDb client, both built using [aiohttp](https://aiohttp.readthedocs.io). The server listens for HTTP requests from Stremio clients and dispatches calls to the client, which translates them to requests to the IMVDb API and web interface, parses the responses and caches the results.
 
 
 ## Prerequisites
 
-Python v3.7 is the minimum version, lower versions haven't been tested.
+The minimum version of Python is 3.7, lower versions haven't been tested.
 
-[Poetry](https://github.com/sdispater/poetry) is used for dependency management, but it isn't required (though recommended), you can use pip.
+[Poetry](https://poetry.eustace.io/) is used for dependency management, but it isn't required (though recommended), you can instead just use pip.
 
 Additionally, in order for this add-on to work, you will need an IMVDb App Key. To get it, register an app [here](https://imvdb.com/developers/apps/new).
 
@@ -46,10 +46,12 @@ Otherwise:
 pip install .
 ```
 
+If you are planning to change the code, you'll also want to do `pre-commit install` to install the [pre-commit](https://pre-commit.com) git hooks. This way, the code will be linted with [Flake8](http://flake8.pycqa.org) and formatted with [Black](https://black.readthedocs.io) before each commit.
+
 
 ## Environment Variables
 
-Before running the app, set environment variables as follows:
+Before running the app, set environment variables according to the example for your platform:
 
 #### Linux/OS X
 
