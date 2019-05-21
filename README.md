@@ -111,7 +111,7 @@ Even though the add-on provides correct YouTube IDs, Stremio sometimes struggles
 
 ## Screenshot
 
-![Screenshot](/static/screenshot.png)
+![Screenshot](/static/screenshot.jpg)
 
 
 ## License
