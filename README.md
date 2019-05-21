@@ -4,19 +4,25 @@ This is a [Stremio](https://www.stremio.com/) add-on with more than 83,000 music
 
 ---
 
-If you just want to watch the videos provided by the add-on in Stremio, open https://stremio-imvdb.schneider.ax and click the install button. Everything below is for running the addon server.
+If you just want to watch the videos provided by the add-on in Stremio, you don't need this. Simply open https://stremio-imvdb.schneider.ax and click the install button. Everything below is for running the addon server.
 
 ---
 
 
 ## Description
 
-This is a Python app that retrieves the YouTube IDs of music videos from IMVDb using both its API and web interface and provides them to Stremio. It supports in-memory caching, can be configured using environment variables and run in Docker.
+This add-on is a Python app that retrieves the YouTube IDs of music videos from IMVDb and provides them to Stremio. It supports in-memory caching, can be configured using environment variables and run in Docker.
+
+The app is split into two main parts, add-on server and IMVDb client, both built using [aiohttp](https://aiohttp.readthedocs.io). The server listens for HTTP requests from Stremio clients and dispatches calls to the client, which translates them to requests to the IMVDb API and web interface.
 
 
-## App Registration
+## Prerequisites
 
-In order for this add-on to work, you need to provide an IMVDb App Key. To get it, register an app [here](https://imvdb.com/developers/apps/new).
+Python v3.7 is the minimum version, lower versions haven't been tested.
+
+[Poetry](https://github.com/sdispater/poetry) is used for dependency management, but it isn't required (though recommended), you can use pip.
+
+Additionally, in order for this add-on to work, you will need an IMVDb App Key. To get it, register an app [here](https://imvdb.com/developers/apps/new).
 
 
 ## Installation
@@ -28,13 +34,13 @@ git clone https://github.com/axtgr/stremio-imvdb
 cd stremio-imvdb
 ```
 
-The add-on uses [Poetry](https://github.com/sdispater/poetry) for dependency management. If you already have Poetry, you can use it to install the dependencies:
+Then install the dependencies. If you have Poetry:
 
 ```
 poetry install
 ```
 
-Otherwise, you can simply use pip:
+Otherwise:
 
 ```
 pip install .
@@ -75,7 +81,7 @@ STREMIO_IMVDB_EMAIL     |                   | Contact email
 
 ## Running
 
-If you have Poetry:
+Using Poetry:
 
 ```
 poetry run start
