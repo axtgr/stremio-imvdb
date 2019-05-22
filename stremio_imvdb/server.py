@@ -1,7 +1,7 @@
 import os
 import jinja2
 import aiohttp_jinja2
-from datetime import date
+from urllib.parse import parse_qs
 from aiohttp import web
 from stremio_imvdb.client import IMVDbClient
 
@@ -66,22 +66,28 @@ class Server:
         metas = await self.client.get_latest_releases_list()
         return web.json_response({"metas": metas})
 
-    @route("/catalog/Music Videos/popular/genre={period}.json")
+    @route("/catalog/Music Videos/popular/{query}.json")
     async def popular_catalog_handler(self, request):
-        period = request.match_info.get("period", "Latest")
-        metas = await self.client.get_popular_list(period)
+        params = parse_qs(request.match_info["query"])
+        metas = await self.client.get_popular_list(
+            params["genre"][0], skip=int(params.get("skip", [0])[0])
+        )
         return web.json_response({"metas": metas})
 
-    @route("/catalog/Music Videos/by_country/genre={country}.json")
+    @route("/catalog/Music Videos/by_country/{query}.json")
     async def by_country_catalog_handler(self, request):
-        country = request.match_info.get("country", "United States")
-        metas = await self.client.get_videos_for_country_list(country)
+        params = parse_qs(request.match_info["query"])
+        metas = await self.client.get_videos_for_country_list(
+            params["genre"][0], skip=int(params.get("skip", [0])[0])
+        )
         return web.json_response({"metas": metas})
 
-    @route("/catalog/Music Videos/by_year/genre={year}.json")
+    @route("/catalog/Music Videos/by_year/{query}.json")
     async def by_year_catalog_handler(self, request):
-        year = request.match_info.get("year", date.today().year)
-        metas = await self.client.get_videos_for_year_list(year)
+        params = parse_qs(request.match_info["query"])
+        metas = await self.client.get_videos_for_year_list(
+            params["genre"][0], skip=int(params.get("skip", [0])[0])
+        )
         return web.json_response({"metas": metas})
 
     @route("/meta/movie/{id}.json")
