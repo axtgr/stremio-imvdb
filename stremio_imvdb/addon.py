@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 
 import os
-import jinja2
-import aiohttp_jinja2
 from datetime import date
-from aiohttp import web
-from stremio_imvdb.client import IMVDbClient
+from stremio_imvdb.server import Server
 from stremio_imvdb.common import ID_PREFIX, COUNTRIES
 
 
@@ -21,7 +18,6 @@ if config["app_key"] is None:
     exit(1)
 
 
-TEMPLATES_DIR = os.path.dirname(os.path.realpath(__file__)) + "/templates/"
 MANIFEST = {
     "id": "community.imvdb",
     "version": "0.1.0",
@@ -75,95 +71,11 @@ MANIFEST = {
 }
 
 
-client = IMVDbClient(app_key=config["app_key"])
-routes = web.RouteTableDef()
-
-
-@routes.get("/")
-@aiohttp_jinja2.template("home.j2")
-async def home_handler(request):
-    return MANIFEST
-
-
-@routes.get("/manifest.json")
-async def manifest_handler(request):
-    return web.json_response(MANIFEST)
-
-
-@routes.get("/catalog/Music Videos/best_new.json")
-async def best_new_catalog_handler(request):
-    metas = await client.get_best_new_list()
-    return web.json_response({"metas": metas})
-
-
-@routes.get("/catalog/Music Videos/latest_releases.json")
-async def latest_releases_catalog_handler(request):
-    metas = await client.get_latest_releases_list()
-    return web.json_response({"metas": metas})
-
-
-@routes.get("/catalog/Music Videos/popular.json")
-@routes.get("/catalog/Music Videos/popular/genre={period}.json")
-async def popular_catalog_handler(request):
-    period = request.match_info.get("period", "Latest")
-    metas = await client.get_popular_list(period)
-    return web.json_response({"metas": metas})
-
-
-@routes.get("/catalog/Music Videos/by_country.json")
-@routes.get("/catalog/Music Videos/by_country/genre={country}.json")
-async def by_country_catalog_handler(request):
-    country = request.match_info.get("country", "United States")
-    metas = await client.get_videos_for_country_list(country)
-    return web.json_response({"metas": metas})
-
-
-@routes.get("/catalog/Music Videos/by_year.json")
-@routes.get("/catalog/Music Videos/by_year/genre={year}.json")
-async def by_year_catalog_handler(request):
-    country = request.match_info.get("year", date.today().year)
-    metas = await client.get_videos_for_year_list(country)
-    return web.json_response({"metas": metas})
-
-
-@routes.get("/meta/movie/{id}.json")
-async def meta_handler(request):
-    id = request.match_info["id"]
-    meta = await client.get_video_meta(id)
-    return web.json_response({"meta": meta})
-
-
-@routes.get("/stream/movie/{id}.json")
-async def stream_handler(request):
-    id = request.match_info["id"]
-    streams = await client.get_video_streams(id)
-    return web.json_response({"streams": streams})
-
-
-async def on_response_prepare(request, response):
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Headers"] = "*"
-    return response
-
-
-async def on_startup(app):
-    await client.init()
-
-
-async def on_shutdown(app):
-    await client.shutdown()
-
-
-app = web.Application()
-app.on_response_prepare.append(on_response_prepare)
-app.on_startup.append(on_startup)
-app.on_shutdown.append(on_shutdown)
-app.add_routes(routes)
-aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader(TEMPLATES_DIR))
+server = Server(MANIFEST, config["app_key"])
 
 
 def start():
-    web.run_app(app, host=config["host"], port=config["port"])
+    server.run(host=config["host"], port=config["port"])
 
 
 if __name__ == "__main__":
