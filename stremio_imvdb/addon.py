@@ -23,7 +23,7 @@ MANIFEST = {
     "version": "0.1.0",
     "name": "IMVDb Music Videos",
     "description": "Watch 83,000+ music videos from IMVDb in Stremio",
-    "types": ["movie"],
+    "types": ["Music Videos", "movie"],
     "catalogs": [
         {"type": "Music Videos", "id": "best_new", "name": "Best New"},
         {"type": "Music Videos", "id": "latest_releases", "name": "Latest Releases"},
