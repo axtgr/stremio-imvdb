@@ -60,7 +60,11 @@ class IMVDbClient:
         await self._session.close()
 
     def _video_to_meta(self, video):
-        released = datetime.fromtimestamp(video["release_date_stamp"]).isoformat()
+        if video["release_date_stamp"]:
+            released = datetime.fromtimestamp(video["release_date_stamp"]).isoformat()
+        else:
+            released = None
+
         return {
             "type": "movie",
             "id": ID_PREFIX + str(video["id"]),
