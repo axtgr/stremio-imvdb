@@ -4,7 +4,7 @@ This is a [Stremio](https://www.stremio.com/) add-on with more than 83,000 music
 
 ---
 
-If you just want to watch the videos provided by the add-on in Stremio, you don't need this. Simply open https://stremio-imvdb.schneider.ax and click the install button. Everything below is for running the addon server.
+If you just want to watch the videos provided by the add-on in Stremio, you don't need this. Simply open https://stremio-imvdb.tgr.ax and click the install button. Everything below is for running the addon server.
 
 ---
 
